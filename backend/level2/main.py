@@ -18,10 +18,27 @@ class CarRentalBooking:
         return self.calcTimeComponent() + self.calcDistComponent()
 
     def calcTimeComponent(self):
+        num_of_days = self.getNumDays()
+        price = self.price_per_day
+
+        total_price = 0
+        if num_of_days > 10:
+            total_price += price * 0.5 * (num_of_days - 10)
+            num_of_days = 10
+        if num_of_days > 4:
+            total_price += price * 0.7 * (num_of_days - 4)
+            num_of_days = 4
+        if num_of_days > 1:
+            total_price += price * 0.9 * (num_of_days - 1)
+            num_of_days = 1
+        total_price += price
+
+        return total_price
+
+    def getNumDays(self):
         start = datetime.datetime.strptime(self.start_date, '%Y-%m-%d')
         end = datetime.datetime.strptime(self.end_date, '%Y-%m-%d')
-        num_of_days = (end - start).days + 1
-        return num_of_days * self.price_per_day
+        return (end - start).days + 1
 
     def calcDistComponent(self):
         return self.distance * self.price_per_km
